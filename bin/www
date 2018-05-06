@@ -28,6 +28,10 @@ const socketHandler = require('../modules/socketioHandler')(io);
  */
 
 server.listen(port);
+
+// set socketio object in server
+app.set('socketio', io);
+
 server.on('error', onError);
 server.on('listening', onListening);
 

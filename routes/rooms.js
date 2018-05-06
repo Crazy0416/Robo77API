@@ -23,7 +23,7 @@ router.post('/', function(req, res, next) {
     } else {
         res.json({
             "success": true,
-            "roomId" : "1",
+            "roomId" : 1,
             "message": "1 room create"
         })
     }

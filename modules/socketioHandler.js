@@ -19,7 +19,7 @@ exports = module.exports = function(io) {
             });
 
             socket.join(msg, () => {
-                console.log(socket.id, ' client\' in room ', Object.keys(socket.rooms)[0]);
+                console.log(socket.id, ' client\'s in room ', Object.keys(socket.rooms)[0]);
             });
         });
 

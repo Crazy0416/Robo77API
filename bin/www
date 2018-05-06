@@ -8,6 +8,7 @@ const app = require('../app');
 const debug = require('debug')('robo77api:server');
 const http = require('http');
 
+
 /**
  * Get port from environment and store in Express.
  */
@@ -16,11 +17,12 @@ const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
- * Create HTTP server.
+ * Create HTTP server. and upgrade to socketio
  */
 
 const server = http.createServer(app);
-
+const io = require('socket.io')(server);
+const socketHandler = require('../modules/socketioHandler')(io);
 /**
  * Listen on provided port, on all network interfaces.
  */
@@ -87,4 +89,5 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+  console.log('Listening on ' + bind);
 }

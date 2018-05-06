@@ -41,7 +41,7 @@ router.get('/:roomId', function(req, res, next) {
     } else {
         res.json({
             "success": true,
-            "roomId" : "1"
+            "roomId" : 1
         })
     }
 });

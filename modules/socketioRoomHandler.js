@@ -18,9 +18,9 @@ exports = module.exports = function(io) {
                     let user = new User(socket.id, []);
                     let roomIndex = Game.rooms.findByRoomId(msg.roomId);
                     console.log("SOCKET joinRoom EVENT: ", "찾은 룸 id: ", roomIndex);
-                    Game.rooms.dataStore[roomIndex].userPush(user);
+                    Game.rooms.getElem(roomIndex).userPush(user);
                     console.log("SOCKET joinRoom EVENT: ", "GameRoom 상태: ", Game.rooms);
-                    console.log("SOCKET joinRoom EVENT: ", "GameRoom User 리스트: ", Game.rooms.dataStore[roomIndex].userList);
+                    console.log("SOCKET joinRoom EVENT: ", "GameRoom User 리스트: ", Game.rooms.getElem(roomIndex).userList);
                     console.log("SOCKET joinRoom EVENT: ", socket.id, ' client\'s JOIN room ', Object.keys(socket.rooms)[0]);
                 });
 
@@ -61,10 +61,10 @@ exports = module.exports = function(io) {
         socket.on('emitCard', function(msg) {
 
         })
-    });
 
-    io.on('disconnect', () => {
-        // Rooms are left automatically upon disconnection
-        console.log('disconnected');
+        socket.on('disconnect', () => {
+            // Rooms are left automatically upon disconnection
+            console.log('disconnected');
+        });
     });
 };

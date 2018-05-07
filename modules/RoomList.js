@@ -7,7 +7,7 @@ class RoomList extends List{
         super();
     }
 
-    findRoomId(elementId){
+    findByRoomId(elementId){
         for(let i=0; i<this.listSize; i++){
             if(this.dataStore[i].roomId === elementId){
                 return i;
@@ -16,7 +16,7 @@ class RoomList extends List{
         return -1;
     };
 
-    removeById (elementId){
+    removeByRoomId (elementId){
         let removePos = this.findRoomId(elementId);
 
         if(removePos > -1){

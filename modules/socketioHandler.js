@@ -1,31 +1,66 @@
 const redis = require('../modules/redisHandler');
+const Application = require('../models/Application');
+const GameRoom = require('../models/GameRoom');
+const User = require('../models/User');
+
+const Game = new Application();
 
 exports = module.exports = function(io) {
     io.on('connection', (socket) => {
-        console.log(socket.id ," connected");
+        console.log("SOCKET CONNECTION EVENT: ", socket.id ," connected");
 
         socket.on('joinRoom', function(msg) {
-            console.log('joinRoom name', msg);
-            socket.join(msg, () => {
-                console.log(socket.id, ' client\' in room ', Object.keys(socket.rooms)[0]);
-            });
+            console.log("SOCKET joinRoom EVENT: ", 'joinRoom id: ', msg.roomId);
+
+            if(Game.rooms.findByRoomId(msg.roomId) !== -1) {     // 방 존재한다면 JOIN
+                socket.join(msg, () => {
+                    // User class create
+                    let user = new User(socket.id, []);
+                    let roomIndex = Game.rooms.findByRoomId(msg.roomId);
+                    console.log("SOCKET joinRoom EVENT: ", "찾은 룸 id: ", roomIndex);
+                    Game.rooms.dataStore[roomIndex].userPush(user);
+                    console.log("SOCKET joinRoom EVENT: ", "GameRoom 상태: ", Game.rooms);
+                    console.log("SOCKET joinRoom EVENT: ", "GameRoom User 리스트: ", Game.rooms.dataStore[roomIndex].userList);
+                    console.log("SOCKET joinRoom EVENT: ", socket.id, ' client\'s JOIN room ', Object.keys(socket.rooms)[0]);
+                });
+
+            } else {                                            // 방 존재하지 않으면
+                // TODO: 오류처리
+
+            }
         });
 
         socket.on('createRoom', function(msg) {
-            console.log('joinRoom name', msg);
-            redis.set('room'+msg, socket.id, function(err) {
+            console.log("SOCKET createRoom EVENT: ", 'joinRoom name', msg.roomId);
+
+            // redis에 룸 정보와 딜러 정보 추가
+            redis.set('room'+msg.roomId, socket.id, function(err) {
                if(err) console.log(err);
-               console.log(socket.id, " set dealer at redis");
+               console.log("SOCKET createRoom Event: \n" +
+                   "\tREDIS SET: ", socket.id, " set dealer at redis");
             });
 
-            socket.join(msg, () => {
-                console.log(socket.id, ' client\'s in room ', Object.keys(socket.rooms)[0]);
-            });
+            if(Game.rooms.findByRoomId(msg.roomId) !== -1) {     // 방 존재한다면
+                // TODO : 오류 처리
+
+            } else {                                            // 방 없으면 생성
+                socket.join(msg, () => {
+                    // User, GameRoom class create
+                    let user = new User(socket.id, []);
+                    let gameRoom = new GameRoom(msg.roomId);
+                    gameRoom.userPush(user);
+
+                    Game.rooms.append(gameRoom);
+                    console.log("SOCKET createRoom EVENT: ", "GameRoom 상태: ", Game.rooms);
+                    console.log("SOCKET createRoom EVENT: ", "GameRoom User 리스트: ", gameRoom.userList);
+                    console.log("SOCKET createRoom EVENT: ", socket.id, ' client\'s JOIN room ', Object.keys(socket.rooms)[0]);
+                });
+            }
         });
 
-        socket.on('chat message', function(msg){
-            io.emit('chat message', msg);
-        });
+        socket.on('emitCard', function(msg) {
+
+        })
     });
 
     io.on('disconnect', () => {

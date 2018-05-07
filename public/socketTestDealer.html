@@ -21,7 +21,9 @@
                 "roomId" : 1
             });
             $('form').submit(function(){
-                socket.emit('chat message', $('#m').val());
+                socket.emit('gameStart', {
+                    "roomId": 1
+                });
                 $('#m').val('');
                 return false;
             });

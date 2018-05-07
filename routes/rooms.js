@@ -34,14 +34,14 @@ router.get('/:roomId', function(req, res, next) {
     let io = req.app.get('socketio');
 
     if(io.sockets.adapter.rooms['1']) {
-        console.log("1 room already exist");
-        res.status(403).json({
-            "success": false
-        })
-    } else {
         res.json({
             "success": true,
             "roomId" : 1
+        })
+    } else {
+        console.log("1 room already exist");
+        res.status(403).json({
+            "success": false
         })
     }
 });

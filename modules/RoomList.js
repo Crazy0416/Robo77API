@@ -7,6 +7,10 @@ class RoomList extends List{
         super();
     }
 
+    getElem(index) {
+        return this.dataStore[index];
+    }
+
     findByRoomId(elementId){
         for(let i=0; i<this.listSize; i++){
             if(this.dataStore[i].roomId === elementId){

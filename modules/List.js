@@ -21,6 +21,10 @@ class List {
         return -1;
     };
 
+    getElem(index) {
+        return this.dataStore[index];
+    }
+
     remove (element) {
         let removePos = this.find(element);
 

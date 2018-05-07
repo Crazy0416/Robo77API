@@ -24,9 +24,11 @@ exports = module.exports = function(io, Game) {
                 let clientSocket = io.sockets.connected[user.socketId];
                 clientSocket.emit("setStart", {
                     "socketId": socket.id,
-                    "cards": user.cardList     // TODO: 카드 랜덤을 지급
+                    "cards": user.cardList
                 });
             });
+
+            // TODO : 다음 턴 유저에게 이벤트 전달.
         });
 
 

@@ -9,6 +9,8 @@ class GameRoom {
         this.deck.shuffle();
         this.deck.shuffle();
         this.deck.shuffle();
+        // TODO : 현재 턴을 진행중인 유저와 다음 턴을 해야할 유저들을 나타낼 수 있는 자료구조 만들어야함.
+        
     }
 
     userPush(user) {

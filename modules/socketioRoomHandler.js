@@ -1,11 +1,10 @@
 const redis = require('../modules/redisHandler');
-const Application = require('../models/Application');
 const GameRoom = require('../models/GameRoom');
 const User = require('../models/User');
 
-const Game = new Application();
 
-exports = module.exports = function(io) {
+
+exports = module.exports = function(io, Game) {
     io.on('connection', (socket) => {
         console.log("SOCKET CONNECTION EVENT: ", socket.id ," connected");
 
@@ -13,7 +12,7 @@ exports = module.exports = function(io) {
             console.log("SOCKET joinRoom EVENT: ", 'joinRoom id: ', msg.roomId);
 
             if(Game.rooms.findByRoomId(msg.roomId) !== -1) {     // 방 존재한다면 JOIN
-                socket.join(msg, () => {
+                socket.join(msg.roomId, () => {
                     // User class create
                     let user = new User(socket.id, []);
                     let roomIndex = Game.rooms.findByRoomId(msg.roomId);
@@ -44,7 +43,7 @@ exports = module.exports = function(io) {
                 // TODO : 오류 처리
 
             } else {                                            // 방 없으면 생성
-                socket.join(msg, () => {
+                socket.join(msg.roomId, () => {
                     // User, GameRoom class create
                     let user = new User(socket.id, []);
                     let gameRoom = new GameRoom(msg.roomId);
@@ -60,7 +59,7 @@ exports = module.exports = function(io) {
 
         socket.on('emitCard', function(msg) {
 
-        })
+        });
 
         socket.on('disconnect', () => {
             // Rooms are left automatically upon disconnection

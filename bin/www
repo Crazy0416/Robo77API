@@ -22,7 +22,14 @@ app.set('port', port);
 
 const server = http.createServer(app);
 const io = require('socket.io')(server);
-const socketHandler = require('../modules/socketioHandler')(io);
+const Application = require('../models/Application');
+
+// Game Application setup
+const Game = new Application();
+
+const socketHandler1 = require('../modules/socketioRoomHandler')(io, Game);
+const socketHandler2 = require('../modules/socketioGameHandler')(io, Game);
+
 /**
  * Listen on provided port, on all network interfaces.
  */

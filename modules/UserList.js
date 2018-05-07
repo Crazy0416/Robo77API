@@ -9,7 +9,7 @@ class RoomList extends List{
 
     findRoomId(elementId){
         for(let i=0; i<this.listSize; i++){
-            if(this.dataStore[i].roomId === elementId){
+            if(this.dataStore[i].socketId === elementId){
                 return i;
             }
         }

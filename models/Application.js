@@ -8,11 +8,11 @@ class Application {
     }
 
 // methods
-    static createRoom(gameRoom) {
-        Application.rooms.append(gameRoom);
+    createRoom(gameRoom) {
+        this.rooms.append(gameRoom);
     }
-    static deleteRoomById(gameRoomId) {
-        return Application.rooms.removeById(gameRoomId);
+    deleteRoomById(gameRoomId) {
+        return this.rooms.removeByRoomId(gameRoomId);
     }
 }
 

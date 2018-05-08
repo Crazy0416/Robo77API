@@ -21,7 +21,7 @@ class RoomList extends List{
     };
 
     removeByRoomId (elementId){
-        let removePos = this.findRoomId(elementId);
+        let removePos = this.findByRoomId(elementId);
 
         if(removePos > -1){
             this.dataStore.splice(removePos, 1);

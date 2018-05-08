@@ -17,8 +17,7 @@ exports = module.exports = function(io, Game) {
                     // User class create
                     let user = new User(socket.id, []);
                     let roomIndex = Game.rooms.findByRoomId(msg.roomId);
-                    console.log("SOCKET joinRoom EVENT: ", "찾은 룸 id: ", roomIndex);
-                    console.log("SOCKET joinRoom EVENT: ", socket.id, ' client\'s JOIN room ', Object.keys(socket.rooms)[0]);
+                    console.log("SOCKET joinRoom EVENT: ", socket.id, ' client\'s JOIN room: ', Object.keys(socket.rooms)[0]);
 
                     Game.rooms.getElem(roomIndex).userPush(user);
                     socket.roomId = msg.roomId;
@@ -31,8 +30,6 @@ exports = module.exports = function(io, Game) {
         });
 
         socket.on('createRoom', function(msg) {
-            console.log("SOCKET createRoom EVENT: ", 'joinRoom name', msg.roomId);
-
             // redis에 룸 정보와 딜러 정보 추가
             redis.set('room'+msg.roomId, socket.id, function(err) {
                if(err) console.log(err);
@@ -53,7 +50,7 @@ exports = module.exports = function(io, Game) {
                     gameRoom.userList.dealer = user.socketId;       // userList에 딜러 변수 추가
                     socket.roomId = msg.roomId;
 
-                    Game.rooms.append(gameRoom);
+                    Game.createRoom(gameRoom);
                     console.log("SOCKET createRoom EVENT: ", socket.id, ' client\'s JOIN room ', Object.keys(socket.rooms)[0]);
                 });
             }
@@ -64,6 +61,16 @@ exports = module.exports = function(io, Game) {
             let roomIndex = Game.rooms.findByRoomId(socket.roomId);
             let gameRoom = Game.rooms.getElem(roomIndex);
             gameRoom.userList.removeBySocketId(socket.id);
+
+            if(gameRoom.userList.length() === 0) {
+                if(Game.deleteRoomById(socket.roomId)) {        // 룸 삭제되었을 때
+                    console.log("SOCKET disconnect EVENT: ", socket.roomId, " room delete!!", "\n\t" +
+                        "GameRoomList: ", Game.rooms);    
+                } else {                                        // 룸 삭제 실패
+                    // TODO: 룸 삭제 실패 오류 처리 해야함
+                    console.log(colors.red("SOCKET disconnect EVENT: ", socket.roomId, " room doesn't delete!!"))
+                }
+            }
 
             console.log("SOCKET disconnect EVENT: ", "게임 방 유저 리스트: \n" +
             "\t", gameRoom.userList.getList());

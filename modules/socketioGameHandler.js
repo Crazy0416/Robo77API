@@ -14,21 +14,27 @@ exports = module.exports = function(io, Game) {
         2. server->client : setStart -> trunStart
          */
         socket.on('gameStart', function(msg) {
-            let roomId = msg.roomId;
+            console.log("SOCKET gameStart EVENT: ", "on");
             let roomIndex = Game.rooms.findByRoomId(msg.roomId);
+            let gameRoom = Game.rooms.getElem(roomIndex);
 
             // 방에 존재하는 모든 유저에게 카드 5장 배포 딜러 제외
-            Game.rooms.getElem(roomIndex).hitAllUserExceptDealer(socket.id);
+            gameRoom.hitAllUserExceptDealer(socket.id);
 
-            Game.rooms.getElem(roomIndex).userList.forEach(function(user) {
+            gameRoom.userList.getList().forEach(function(user) {
                 let clientSocket = io.sockets.connected[user.socketId];
                 clientSocket.emit("setStart", {
                     "socketId": socket.id,
                     "cards": user.cardList
                 });
+                console.log("SOCKET setStart EVENT: ", "emit user: ", clientSocket.id);
             });
-
             // TODO : 다음 턴 유저에게 이벤트 전달.
+
+            let nextUserSocketId = gameRoom.nextTurnUser().socketId;
+            console.log("SOCKET turnStart EVENT: ", "nextSocketid: ", nextUserSocketId);
+            io.sockets.connected[nextUserSocketId].emit("turnStart");
+            console.log("SOCKET turnStart EVENT: ", "emit");
         });
 
 

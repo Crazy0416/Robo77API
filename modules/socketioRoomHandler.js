@@ -1,6 +1,7 @@
 const redis = require('../modules/redisHandler');
 const GameRoom = require('../models/GameRoom');
 const User = require('../models/User');
+const colors = require('colors');
 
 
 
@@ -19,13 +20,13 @@ exports = module.exports = function(io, Game) {
                     console.log("SOCKET joinRoom EVENT: ", "찾은 룸 id: ", roomIndex);
                     Game.rooms.getElem(roomIndex).userPush(user);
                     console.log("SOCKET joinRoom EVENT: ", "GameRoom 상태: ", Game.rooms);
-                    console.log("SOCKET joinRoom EVENT: ", "GameRoom User 리스트: ", Game.rooms.getElem(roomIndex).userList);
+                    console.log("SOCKET joinRoom EVENT: ", "GameRoom User 리스트: ", Game.rooms.getElem(roomIndex).userList.getList());
                     console.log("SOCKET joinRoom EVENT: ", socket.id, ' client\'s JOIN room ', Object.keys(socket.rooms)[0]);
                 });
 
             } else {                                            // 방 존재하지 않으면
                 // TODO: 오류처리
-
+                console.log(colors.red("SOCKET joinRoom EVENT: " + socket.id + " cannot join ROOM: " + msg.roomId));
             }
         });
 
@@ -41,17 +42,18 @@ exports = module.exports = function(io, Game) {
 
             if(Game.rooms.findByRoomId(msg.roomId) !== -1) {     // 방 존재한다면
                 // TODO : 오류 처리
-
+                console.log(colors.red("SOCKET createRoom EVENT: " + socket.id + " cannot create room: " + msg.roomId));
             } else {                                            // 방 없으면 생성
                 socket.join(msg.roomId, () => {
                     // User, GameRoom class create
                     let user = new User(socket.id, []);
                     let gameRoom = new GameRoom(msg.roomId);
                     gameRoom.userPush(user);
+                    gameRoom.userList.dealer = user.socketId;       // userList에 딜러 변수 추가
 
                     Game.rooms.append(gameRoom);
                     console.log("SOCKET createRoom EVENT: ", "GameRoom 상태: ", Game.rooms);
-                    console.log("SOCKET createRoom EVENT: ", "GameRoom User 리스트: ", gameRoom.userList);
+                    console.log("SOCKET createRoom EVENT: ", "GameRoom User 리스트: ", gameRoom.userList.getList());
                     console.log("SOCKET createRoom EVENT: ", socket.id, ' client\'s JOIN room ', Object.keys(socket.rooms)[0]);
                 });
             }

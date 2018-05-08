@@ -5,10 +5,20 @@ const List = require("./List");
 class RoomList extends List{
     constructor() {
         super();
+        this.dealer = "";
     }
 
     getElem(index) {
         return this.dataStore[index];
+    }
+
+    next() {
+        if(this.dealer === this.getList()[this.pos])
+            return;
+
+        if(this.pos < this.listSize-1){
+            this.pos++;
+        }
     }
 
     findBySocketId(elementId){

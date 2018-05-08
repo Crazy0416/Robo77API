@@ -20,9 +20,16 @@
             socket.emit('joinRoom', {
                 "roomId" : 1
             });
+            roomId = 1;
             $('form').submit(function(){
-                socket.emit('chat message', $('#m').val());
-                $('#m').val('');
+                socket.emit('emitCard', {
+                    socketId: socketId,
+                    roomId: roomId,
+                    cardType: cards[0].cardType,
+                    cardNum: cards[0].cardNum,
+                    cardId: cards[0].cardId
+                });
+                console.log("emit card: ", cards[0]);
                 return false;
             });
             socket.on('chat message', function(msg){
@@ -31,6 +38,11 @@
 
             socket.on('setStart', function(msg){
                 $('#messages').append($('<li>').text(JSON.stringify(msg)));
+                cards = msg.cards;
+                socketId = msg.socketId;
+                for(card of msg.cards) {
+                    $('#messages').append($('<p>').text("cardNum: " + card.cardNum))
+                }
                 console.log("setStart: ", JSON.stringify(msg));
             });
 

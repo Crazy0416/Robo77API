@@ -1,6 +1,7 @@
 const redis = require('../modules/redisHandler');
 const GameRoom = require('../models/GameRoom');
 const User = require('../models/User');
+const Card = require('../models/Card');
 
 
 
@@ -23,11 +24,11 @@ exports = module.exports = function(io, Game) {
 
             gameRoom.userList.getList().forEach(function(user) {
                 let clientSocket = io.sockets.connected[user.socketId];
+                console.log("SOCKET setStart EVENT: ", "emit user: ", clientSocket.id);
                 clientSocket.emit("setStart", {
                     "socketId": socket.id,
                     "cards": user.cardList
                 });
-                console.log("SOCKET setStart EVENT: ", "emit user: ", clientSocket.id);
             });
 
             let nextUserSocketId = gameRoom.nextTurnUser().socketId;
@@ -43,9 +44,19 @@ exports = module.exports = function(io, Game) {
         emitCard로 받은 카드 데이터를 딜러에게 전달해야한다. cardInfoToDealer
          */
         socket.on('emitCard', function(msg) {
-            if(msg.socketId !== Game.rooms) {
+            /*
+            let roomId = msg.roomId;
+            let gameRoom = Game.rooms.getElem(roomId);
+            let gameRoomUserList = gameRoom.userList.getList();
+            let currTurnPos = gameRoom.userList.currPos();
 
+            if(msg.socketId !== gameRoomUserList[currTurnPos].socketId) {
+                // TODO: 자신 차례도 아닌데 냈을 때 오류처리
+            } else {
+                let currUser = gameRoomUserList[currTurnPos];
+                let emitCardData = new Card(msg.cardType, msg.cardNum, msg.cardId);
             }
+            */
         });
     });
 };

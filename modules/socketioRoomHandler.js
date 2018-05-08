@@ -18,10 +18,10 @@ exports = module.exports = function(io, Game) {
                     let user = new User(socket.id, []);
                     let roomIndex = Game.rooms.findByRoomId(msg.roomId);
                     console.log("SOCKET joinRoom EVENT: ", "찾은 룸 id: ", roomIndex);
-                    Game.rooms.getElem(roomIndex).userPush(user);
-                    console.log("SOCKET joinRoom EVENT: ", "GameRoom 상태: ", Game.rooms);
-                    console.log("SOCKET joinRoom EVENT: ", "GameRoom User 리스트: ", Game.rooms.getElem(roomIndex).userList.getList());
                     console.log("SOCKET joinRoom EVENT: ", socket.id, ' client\'s JOIN room ', Object.keys(socket.rooms)[0]);
+
+                    Game.rooms.getElem(roomIndex).userPush(user);
+                    socket.roomId = msg.roomId;
                 });
 
             } else {                                            // 방 존재하지 않으면
@@ -48,24 +48,27 @@ exports = module.exports = function(io, Game) {
                     // User, GameRoom class create
                     let user = new User(socket.id, []);
                     let gameRoom = new GameRoom(msg.roomId);
+
                     gameRoom.userPush(user);
                     gameRoom.userList.dealer = user.socketId;       // userList에 딜러 변수 추가
+                    socket.roomId = msg.roomId;
 
                     Game.rooms.append(gameRoom);
-                    console.log("SOCKET createRoom EVENT: ", "GameRoom 상태: ", Game.rooms);
-                    console.log("SOCKET createRoom EVENT: ", "GameRoom User 리스트: ", gameRoom.userList.getList());
                     console.log("SOCKET createRoom EVENT: ", socket.id, ' client\'s JOIN room ', Object.keys(socket.rooms)[0]);
                 });
             }
         });
 
-        socket.on('emitCard', function(msg) {
-
-        });
-
         socket.on('disconnect', () => {
             // Rooms are left automatically upon disconnection
-            console.log('disconnected');
+            let roomIndex = Game.rooms.findByRoomId(socket.roomId);
+            let gameRoom = Game.rooms.getElem(roomIndex);
+            gameRoom.userList.removeBySocketId(socket.id);
+
+            console.log("SOCKET disconnect EVENT: ", "게임 방 유저 리스트: \n" +
+            "\t", gameRoom.userList.getList());
+
+            console.log(colors.red(socket.id, ' disconnected'));
         });
     });
 };

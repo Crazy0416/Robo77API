@@ -33,7 +33,7 @@ class RoomList extends List{
     };
 
     removeBySocketId (elementId){
-        let removePos = this.findRoomId(elementId);
+        let removePos = this.findBySocketId(elementId);
 
         if(removePos > -1){
             this.dataStore.splice(removePos, 1);

@@ -13,8 +13,10 @@ class RoomList extends List{
     }
 
     next() {
-        if(this.dealer === this.getList()[this.pos])
+        if(this.dealer === this.getList()[this.pos]){
+            this.pos++;
             return;
+        }
 
         if(this.pos < this.listSize-1){
             this.pos++;

@@ -29,7 +29,6 @@ exports = module.exports = function(io, Game) {
                 });
                 console.log("SOCKET setStart EVENT: ", "emit user: ", clientSocket.id);
             });
-            // TODO : 다음 턴 유저에게 이벤트 전달.
 
             let nextUserSocketId = gameRoom.nextTurnUser().socketId;
             console.log("SOCKET turnStart EVENT: ", "nextSocketid: ", nextUserSocketId);
@@ -38,9 +37,15 @@ exports = module.exports = function(io, Game) {
         });
 
 
-
+        /*
+            카드 전달 받는 이벤트 emitCard
+        먼저 현재 턴에 내야하는게 맞는 유저인지 확인한다.
+        emitCard로 받은 카드 데이터를 딜러에게 전달해야한다. cardInfoToDealer
+         */
         socket.on('emitCard', function(msg) {
+            if(msg.socketId !== Game.rooms) {
 
+            }
         });
     });
 };

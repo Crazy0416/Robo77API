@@ -1,7 +1,9 @@
+const CardList = require('../modules/CardList');
+
 class User {
     constructor(socketId) {
         this.socketId = socketId;
-        this.cardList = [];
+        this.cardList = new CardList();
     }
 }
 

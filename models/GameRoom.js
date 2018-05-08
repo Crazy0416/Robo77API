@@ -23,7 +23,7 @@ class GameRoom {
                 continue;
             
             for(let i = 0; i < CARDNUM_TO_USER; i++) {
-                user.cardList.push(this.deck.unUsedCards.pop());
+                user.cardList.append(this.deck.unUsedCards.pop());
             }
         }
     }

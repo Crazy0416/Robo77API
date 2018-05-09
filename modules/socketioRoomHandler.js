@@ -7,8 +7,6 @@ const colors = require('colors');
 
 exports = module.exports = function(io, Game) {
     io.on('connection', (socket) => {
-        console.log("SOCKET CONNECTION EVENT: ", socket.id ," connected");
-
         socket.on('joinRoom', function(msg) {
             console.log("SOCKET joinRoom EVENT: ", 'joinRoom id: ', msg.roomId);
 

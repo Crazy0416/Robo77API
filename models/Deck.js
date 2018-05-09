@@ -49,6 +49,21 @@ class Deck {
             [this.unUsedCards[i], this.unUsedCards[j]] = [this.unUsedCards[j], this.unUsedCards[i]];
         }
     }
+
+    draw() {
+        let drawCard = this.unUsedCards.pop();
+
+        if(this.unUsedCards.length === 0) {
+            this.unUsedCards = this.usedCards;
+            this.usedCards = [];
+
+            this.shuffle();
+            this.shuffle();
+            this.shuffle();
+        }
+
+        return drawCard;
+    }
 }
 
 module.exports = Deck;

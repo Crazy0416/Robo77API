@@ -10,7 +10,6 @@ class GameRoom {
         this.deck.shuffle();
         this.deck.shuffle();
         this.deck.shuffle();
-        // TODO : 현재 턴을 진행중인 유저와 다음 턴을 해야할 유저들을 나타낼 수 있는 자료구조 만들어야함.
     }
 
     userPush(user) {
@@ -23,13 +22,13 @@ class GameRoom {
                 continue;
             
             for(let i = 0; i < CARDNUM_TO_USER; i++) {
-                user.cardList.append(this.deck.unUsedCards.pop());
+                user.cardList.append(this.deck.draw());
             }
         }
     }
 
     nextTurnUser() {
-        this.userList.next();
+        this.userList.next();       // 딜러를 제외한 유저를 선택
         return this.userList.getElem(this.userList.pos);
     }
 

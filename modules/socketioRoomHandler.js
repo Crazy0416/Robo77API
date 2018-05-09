@@ -58,24 +58,29 @@ exports = module.exports = function(io, Game) {
 
         socket.on('disconnect', () => {
             // Rooms are left automatically upon disconnection
-            let roomIndex = Game.rooms.findByRoomId(socket.roomId);
-            let gameRoom = Game.rooms.getElem(roomIndex);
-            gameRoom.userList.removeBySocketId(socket.id);
+            if(socket.roomId) {
+                let roomIndex = Game.rooms.findByRoomId(socket.roomId);
+                let gameRoom = Game.rooms.getElem(roomIndex);
+                gameRoom.userList.removeBySocketId(socket.id);
 
-            if(gameRoom.userList.length() === 0) {
-                if(Game.deleteRoomById(socket.roomId)) {        // 룸 삭제되었을 때
-                    console.log("SOCKET disconnect EVENT: ", socket.roomId, " room delete!!", "\n\t" +
-                        "GameRoomList: ", Game.rooms);    
-                } else {                                        // 룸 삭제 실패
-                    // TODO: 룸 삭제 실패 오류 처리 해야함
-                    console.log(colors.red("SOCKET disconnect EVENT: ", socket.roomId, " room doesn't delete!!"))
+                if(gameRoom.userList.length() === 0) {
+                    if(Game.deleteRoomById(socket.roomId)) {        // 룸 삭제되었을 때
+                        console.log("SOCKET disconnect EVENT: ", socket.roomId, " room delete!!", "\n\t" +
+                            "GameRoomList: ", Game.rooms);
+                    } else {                                        // 룸 삭제 실패
+                        // TODO: 룸 삭제 실패 오류 처리 해야함
+                        console.log(colors.red("SOCKET disconnect EVENT: ", socket.roomId, " room doesn't delete!!"))
+                    }
                 }
+
+                console.log("SOCKET disconnect EVENT: ", "게임 방 유저 리스트: \n" +
+                    "\t", gameRoom.userList.getList());
+
+                console.log(colors.red(socket.id, ' disconnected'));
+            } else {
+                console.log(colors.red("SOCKET disconnect EVENT: ", socket.id, " aren't in the room"));
+                console.log(colors.red(socket.id, ' disconnected'));
             }
-
-            console.log("SOCKET disconnect EVENT: ", "게임 방 유저 리스트: \n" +
-            "\t", gameRoom.userList.getList());
-
-            console.log(colors.red(socket.id, ' disconnected'));
         });
     });
 };

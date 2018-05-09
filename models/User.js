@@ -7,6 +7,11 @@ class User {
         this.cardList = new CardList();
         this.heart = HEART_CNT;
     }
+
+    loseHeartPoint() {
+        let curHeart = --this.heart;
+        return curHeart;
+    }
 }
 
 module.exports = User;

@@ -11,9 +11,9 @@ exports = module.exports = function(io, Game) {
         console.log("SOCKET CONNECTION EVENT: ", socket.id ," connected");
 
         /*
-            게임시작
-        1. client->server : gameStart
-        2. server->client : setStart -> trunStart
+                게임시작
+            1. client->server : gameStart
+            2. server->client : setStart -> trunStart
          */
         socket.on('gameStart', function(msg) {
             console.log("SOCKET gameStart EVENT: ", "on");
@@ -40,9 +40,9 @@ exports = module.exports = function(io, Game) {
 
 
         /*
-            카드 전달 받는 이벤트 emitCard
-        먼저 현재 턴에 내야하는게 맞는 유저인지 확인한다.
-        emitCard로 받은 카드 데이터를 딜러에게 전달해야한다. cardInfoToDealer
+                카드 전달 받는 이벤트 emitCard
+            먼저 현재 턴에 내야하는게 맞는 유저인지 확인한다.
+            emitCard로 받은 카드 데이터를 딜러에게 전달해야한다. cardInfoToDealer
          */
         socket.on('emitCard', function(msg) {
             console.log("SOCKET emitCard EVENT: ", msg.socketId, " emit card => " +
@@ -80,5 +80,134 @@ exports = module.exports = function(io, Game) {
 
             }
         });
+
+        /*
+                multipelsOf11
+            방금 낸 카드가 total 11의 배수가 된 경우
+         */
+        socket.on('multiplesOf11', function(msg) {
+            console.log("SOCKET multiplesOf11 EVENT: ", "message To => ", msg.socketId);
+
+            let roomIndex = Game.rooms.findByRoomId(msg.roomId);
+            let gameRoom = Game.rooms.getElem(roomIndex);
+            let gameRoomUserList = gameRoom.userList;
+            let targetUser = gameRoomUserList.findBySocketId(msg.socketId);
+            let targetUserSocket = io.sockets.connected[msg.socketId];
+
+            if(targetUser.loseHeartPoint() === 0) { // 하트 포인트 없애고 게임 끝
+                // 클라이언트 모두에게 gameOver emit
+                gameRoomUserList.getList().forEach(function(user) {
+                    let clientSocket = io.sockets.connected[user.socketId];
+                    console.log("SOCKET gameOver EVENT: ", "emit user: ", clientSocket.id);
+                    clientSocket.emit("gameOver");
+                })
+            } else {                                // 하트 포인트 없애고 게임 진행
+                // 새로운 카드를 드로우
+                let drawCard = gameRoom.deck.draw();
+                targetUser.cardList.append(drawCard);
+                console.log("SOCKET multiplesOf11 EVENT: ", "target User CardList: \n\t",
+                    targetUser.cardList);
+
+                targetUserSocket.emit("turnEndAndUpdate", {
+                    "socketId": targetUserSocket.id,
+                    "heart": -1,
+                    "cardType": drawCard.cardType,
+                    "cardNum": drawCard.cardNum,
+                    "cardId": drawCard.cardId,
+                });
+                console.log("SOCKET multiplesOf11 EVENT: ", "turnEndAndUpdate emit to =>", targetUserSocket.id);
+
+                let nextUserSocketId = gameRoom.nextTurnUser().socketId;
+                console.log("SOCKET turnStart EVENT: ", "nextSocketid: ", nextUserSocketId);
+                io.sockets.connected[nextUserSocketId].emit("turnStart");
+                console.log("SOCKET turnStart EVENT: ", "emit");
+            }
+        });
+
+        /*
+                noCondition
+            방금 낸 카드가 아무런 상황 없이 지나는 경우
+         */
+        socket.on('noCondition', function(msg) {
+            console.log("SOCKET noCondition EVENT: ", "message To => ", msg.socketId);
+
+            let roomIndex = Game.rooms.findByRoomId(msg.roomId);
+            let gameRoom = Game.rooms.getElem(roomIndex);
+            let gameRoomUserList = gameRoom.userList;
+            let targetUser = gameRoomUserList.findBySocketId(msg.socketId);
+            let targetUserSocket = io.sockets.connected[msg.socketId];
+
+            // 새로운 카드를 드로우
+            let drawCard = gameRoom.deck.draw();
+            targetUser.cardList.append(drawCard);
+            console.log("SOCKET noCondition EVENT: ", "target User CardList: \n\t",
+                targetUser.cardList);
+
+            targetUserSocket.emit("turnEndAndUpdate", {
+                "socketId": targetUserSocket.id,
+                "heart": 0,
+                "cardType": drawCard.cardType,
+                "cardNum": drawCard.cardNum,
+                "cardId": drawCard.cardId,
+            });
+            console.log("SOCKET noCondition EVENT: ", "turnEndAndUpdate emit to =>", targetUserSocket.id);
+
+            let nextUserSocketId = gameRoom.nextTurnUser().socketId;
+            console.log("SOCKET turnStart EVENT: ", "nextSocketid: ", nextUserSocketId);
+            io.sockets.connected[nextUserSocketId].emit("turnStart");
+            console.log("SOCKET turnStart EVENT: ", "emit");
+        });
+
+        /*
+                gameOver77
+            방금 낸 카드가 total 77이상이 되어서 세트를 끝내는 경우
+         */
+        socket.on('gameOver77', function(msg) {
+            console.log("SOCKET gameOver77 EVENT: ", "message To => ", msg.socketId);
+
+            let roomIndex = Game.rooms.findByRoomId(msg.roomId);
+            let gameRoom = Game.rooms.getElem(roomIndex);
+            let gameRoomUserList = gameRoom.userList;
+            let targetUser = gameRoomUserList.findBySocketId(msg.socketId);
+            let targetUserSocket = io.sockets.connected[msg.socketId];
+
+            if(targetUser.loseHeartPoint() === 0) { // 하트 포인트 없애고 게임 끝
+                // 클라이언트 모두에게 gameOver emit
+                gameRoomUserList.getList().forEach(function(user) {
+                    let clientSocket = io.sockets.connected[user.socketId];
+                    console.log("SOCKET gameOver EVENT: ", "emit user: ", clientSocket.id);
+                    clientSocket.emit("gameOver");
+                })
+            } else {                                // 하트 포인트 없애고 게임 진행
+                // 새로운 카드를 드로우
+                let drawCard = gameRoom.deck.draw();
+                targetUser.cardList.append(drawCard);
+                console.log("SOCKET gameOver77 EVENT: ", "target User CardList: \n\t",
+                    targetUser.cardList);
+
+                targetUserSocket.emit("turnEndAndUpdate", {
+                    "socketId": targetUserSocket.id,
+                    "heart": -1,
+                    "cardType": drawCard.cardType,
+                    "cardNum": drawCard.cardNum,
+                    "cardId": drawCard.cardId,
+                });
+                console.log("SOCKET multiplesOf11 EVENT: ", "turnEndAndUpdate emit to =>", targetUserSocket.id);
+
+                gameRoom.deck.reshuffleUsedCards();         // usedCards를 unUsedCards로 옮기고 셔플. 세트 재시작
+
+                // setOver emit
+                gameRoomUserList.getList().forEach(function(user) {
+                    let clientSocket = io.sockets.connected[user.socketId];
+                    console.log("SOCKET setOver EVENT: ", "emit user: ", clientSocket.id);
+                    clientSocket.emit("setOver");
+                });
+
+                let nextUserSocketId = gameRoom.nextTurnUser().socketId;
+                console.log("SOCKET turnStart EVENT: ", "nextSocketid: ", nextUserSocketId);
+                io.sockets.connected[nextUserSocketId].emit("turnStart");
+                console.log("SOCKET turnStart EVENT: ", "emit");
+            }
+        })
     });
 };

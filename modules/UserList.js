@@ -2,7 +2,7 @@
 
 const List = require("./List");
 
-class RoomList extends List{
+class UserList extends List{
     constructor() {
         super();
         this.dealer = "";
@@ -13,13 +13,13 @@ class RoomList extends List{
     }
 
     next() {
-        if(this.dealer === this.getList()[this.pos]){
-            this.pos++;
-            return;
-        }
-
         if(this.pos < this.listSize-1){
             this.pos++;
+        } else {
+            this.pos = 0;
+        }
+        if(this.dealer === this.getList()[this.pos].socketId){
+            this.next();
         }
     }
 
@@ -44,4 +44,4 @@ class RoomList extends List{
     };
 }
 
-module.exports = RoomList;
+module.exports = UserList;

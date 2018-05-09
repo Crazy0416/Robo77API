@@ -50,16 +50,20 @@ class Deck {
         }
     }
 
+    reshuffleUsedCards() {
+        this.unUsedCards = this.usedCards;
+        this.usedCards = [];
+
+        this.shuffle();
+        this.shuffle();
+        this.shuffle();
+    }
+
     draw() {
         let drawCard = this.unUsedCards.pop();
 
         if(this.unUsedCards.length === 0) {
-            this.unUsedCards = this.usedCards;
-            this.usedCards = [];
-
-            this.shuffle();
-            this.shuffle();
-            this.shuffle();
+            this.reshuffleUsedCards();
         }
 
         return drawCard;

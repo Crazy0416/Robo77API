@@ -4,16 +4,16 @@ const path = require('path');
 const fs = require('fs');
 const colors = require('colors');
 
-const lOGFILEPATH = "~/.forever/Robo77API.log";
+const lOGFILEPATH = "/home/ubuntu/.forever/Robo77API.log";
 
 router.get('/', function(req, res, next) {
 
     fs.open(lOGFILEPATH, 'r', function(err, fd) {
         fs.fstat(fd, function(err, stats) {
             let fileSize = stats.size;
-            let chunkSize = 2000;
-            let buffer=new Buffer(2000);
-            let startPosition = fileSize - 2000;
+            let chunkSize = 3000;
+            let buffer=new Buffer(3000);
+            let startPosition = fileSize - 3000;
 
 
             if (startPosition < 0) {

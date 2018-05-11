@@ -93,7 +93,8 @@ exports = module.exports = function(io, Game) {
             let roomIndex = Game.rooms.findByRoomId(msg.roomId);
             let gameRoom = Game.rooms.getElem(roomIndex);
             let gameRoomUserList = gameRoom.userList;
-            let targetUser = gameRoomUserList.findBySocketId(msg.socketId);
+            let targetUserId = gameRoomUserList.findBySocketId(msg.socketId);
+            let targetUser = gameRoomUserList.getList()[targetUserId];
             let targetUserSocket = io.sockets.connected[msg.socketId];
 
             if(targetUser.loseHeartPoint() === 0) { // 하트 포인트 없애고 게임 끝
@@ -136,7 +137,8 @@ exports = module.exports = function(io, Game) {
             let roomIndex = Game.rooms.findByRoomId(msg.roomId);
             let gameRoom = Game.rooms.getElem(roomIndex);
             let gameRoomUserList = gameRoom.userList;
-            let targetUser = gameRoomUserList.findBySocketId(msg.socketId);
+            let targetUserId = gameRoomUserList.findBySocketId(msg.socketId);
+            let targetUser = gameRoomUserList.getList()[targetUserId];
             let targetUserSocket = io.sockets.connected[msg.socketId];
 
             // 새로운 카드를 드로우
@@ -170,7 +172,8 @@ exports = module.exports = function(io, Game) {
             let roomIndex = Game.rooms.findByRoomId(msg.roomId);
             let gameRoom = Game.rooms.getElem(roomIndex);
             let gameRoomUserList = gameRoom.userList;
-            let targetUser = gameRoomUserList.findBySocketId(msg.socketId);
+            let targetUserId = gameRoomUserList.findBySocketId(msg.socketId);
+            let targetUser = gameRoomUserList.getList()[targetUserId];
             let targetUserSocket = io.sockets.connected[msg.socketId];
 
             if(targetUser.loseHeartPoint() === 0) { // 하트 포인트 없애고 게임 끝

@@ -61,6 +61,14 @@ exports = module.exports = function(io, Game) {
                 let gameRoom = Game.rooms.getElem(roomIndex);
                 gameRoom.userList.removeBySocketId(socket.id);
 
+                if(gameRoom.userList.dealer === socket.id) {            // 딜러가 나갔을 때 전부 gameOver emit
+                    gameRoom.userList.getList().forEach(function(user) {
+                        let clientSocket = io.sockets.connected[user.socketId];
+                        console.log("SOCKET gameOver EVENT: ", "emit user: ", clientSocket.id);
+                        clientSocket.emit("gameOver");
+                    })
+                }
+
                 if(gameRoom.userList.length() === 0) {
                     if(Game.deleteRoomById(socket.roomId)) {        // 룸 삭제되었을 때
                         console.log("SOCKET disconnect EVENT: ", socket.roomId, " room delete!!", "\n\t" +

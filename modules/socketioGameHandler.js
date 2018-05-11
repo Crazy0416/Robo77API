@@ -73,6 +73,8 @@ exports = module.exports = function(io, Game) {
                     socket.emit("emitComplete");            // 카드 낸 클라이언트에게 emitComplete 이벤트 전달.
                     console.log("SOCKET emitCard EVENT: ", "emit emitComplete to ", socket.id);
                     console.log("SOCKET emitCard EVENT: ", "emit cardInfoToDealer");
+                    console.log("SOCKET emitCard EVENT: ", "gameRoom deck unUsedCards List: ", gameRoom.deck.unUsedCards);
+                    console.log("SOCKET emitCard EVENT: ", "gameRoom deck usedCards List: ", gameRoom.deck.usedCards);
                 } else {
                     console.log(colors.red("SOCKET emit EVENT: ", "card doesn't remove!!", "\n\t",
                         curUser.cardList.getList()));

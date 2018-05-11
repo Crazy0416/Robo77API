@@ -33,7 +33,7 @@ class Deck {
             cardList.push(card);
         }
         for(let cnt = 0; cnt < 4; cnt++) {      // x1 카드 4장
-            let card = new Card(1, null, i++);
+            let card = new Card(1, 1, i++);
             cardList.push(card);
         }
         let card = new Card(0, 76, i++);

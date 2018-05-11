@@ -105,6 +105,7 @@ exports = module.exports = function(io, Game) {
             } else {                                // 하트 포인트 없애고 게임 진행
                 // 새로운 카드를 드로우
                 let drawCard = gameRoom.deck.draw();
+                console.log("SOCKET multiplesOf11 EVENT: ", "drawCard: ", drawCard);
                 targetUser.cardList.append(drawCard);
                 console.log("SOCKET multiplesOf11 EVENT: ", "target User CardList: \n\t",
                     targetUser.cardList);
@@ -141,6 +142,7 @@ exports = module.exports = function(io, Game) {
 
             // 새로운 카드를 드로우
             let drawCard = gameRoom.deck.draw();
+            console.log("SOCKET noCondition EVENT: ", "drawCard: ", drawCard);
             targetUser.cardList.append(drawCard);
             console.log("SOCKET noCondition EVENT: ", "target User CardList: \n\t",
                 targetUser.cardList);
@@ -184,6 +186,7 @@ exports = module.exports = function(io, Game) {
             } else {                                // 하트 포인트 없애고 게임 진행
                 // 새로운 카드를 드로우
                 let drawCard = gameRoom.deck.draw();
+                console.log("SOCKET gameOver77 EVENT: ", "drawCard: ", drawCard);
                 targetUser.cardList.append(drawCard);
                 console.log("SOCKET gameOver77 EVENT: ", "target User CardList: \n\t",
                     targetUser.cardList);

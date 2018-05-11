@@ -63,7 +63,9 @@ class Deck {
         let drawCard = this.unUsedCards.pop();
 
         if(this.unUsedCards.length === 0) {
+            console.log("unUsedCard length: 0, Deck reshuffle");
             this.reshuffleUsedCards();
+            console.log("reshuffle deck: unUsedCards: ", this.unUsedCards, " usedCards: ", this.usedCards);
         }
 
         return drawCard;

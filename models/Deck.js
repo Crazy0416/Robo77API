@@ -61,6 +61,7 @@ class Deck {
         this.shuffle();
         this.shuffle();
         this.shuffle();
+        console.log("reshuffle deck: unUsedCards: ", this.unUsedCards, " usedCards: ", this.usedCards);
     }
 
     draw() {

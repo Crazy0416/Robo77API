@@ -61,7 +61,7 @@ exports = module.exports = function(io, Game) {
 
                 if(curUser.cardList.removeByCardId(msg.cardId)) {       // 유저가 가진 카드에서 제출한 카드 제거
                     gameRoom.deck.usedCards.push(emitCard);     // usedCards로 제출한 카드 이동
-                    console.log("SOCKET emitCard EVENT: ", curUser.socketId, " card Remove.");
+                    console.log("SOCKET emitCard EVENT: ", emitCard, " card Remove.");
                     console.log("SOCKET emitCard EVENT: ", msg.roomId," room usedCards List: \n",
                         gameRoom.deck.usedCards);
                     roomDealer.emit("cardInfoToDealer", {
@@ -200,7 +200,7 @@ exports = module.exports = function(io, Game) {
                     "cardNum": drawCard.cardNum,
                     "cardId": drawCard.cardId,
                 });
-                console.log("SOCKET multiplesOf11 EVENT: ", "turnEndAndUpdate emit to =>", targetUserSocket.id);
+                console.log("SOCKET gameOver77 EVENT: ", "turnEndAndUpdate emit to =>", targetUserSocket.id);
 
                 gameRoom.deck.reshuffleUsedCards();         // usedCards를 unUsedCards로 옮기고 셔플. 세트 재시작
 

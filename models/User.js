@@ -1,5 +1,5 @@
 const CardList = require('../modules/CardList');
-const HEART_CNT = 5;
+const HEART_CNT = 3;
 
 class User {
     constructor(socketId) {

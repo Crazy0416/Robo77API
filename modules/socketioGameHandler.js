@@ -1,8 +1,5 @@
-const redis = require('../modules/redisHandler');
-const GameRoom = require('../models/GameRoom');
-const User = require('../models/User');
-const Card = require('../models/Card');
 const colors = require('colors');
+const HEART_CNT = 3;
 
 
 
@@ -28,7 +25,8 @@ exports = module.exports = function(io, Game) {
                 console.log("SOCKET setStart EVENT: ", "emit user: ", clientSocket.id);
                 clientSocket.emit("setStart", {
                     "socketId": clientSocket.id,
-                    "cards": user.cardList.getList()
+                    "cards": user.cardList.getList(),
+                    "heart": HEART_CNT
                 });
             });
 

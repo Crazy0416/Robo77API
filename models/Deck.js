@@ -37,7 +37,7 @@ class Deck {
             cardList.push(card);
         }
         for(let cnt = 1; cnt <= 6; cnt++) {      // 11,22,33,44,55,66 카드 1장
-            let card = new Card(1, cnt*11, i++);
+            let card = new Card(0, cnt*11, i++);
             cardList.push(card);
         }
         let card = new Card(0, 76, i++);

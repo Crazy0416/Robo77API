@@ -55,7 +55,7 @@ class Deck {
     }
 
     reshuffleUsedCards() {
-        this.unUsedCards = this.usedCards;
+        this.unUsedCards.concat(this.usedCards);
         this.usedCards = [];
 
         this.shuffle();

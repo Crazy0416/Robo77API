@@ -45,7 +45,7 @@ exports = module.exports = function(io, Game) {
                     let gameRoom = new GameRoom(msg.roomId);
 
                     gameRoom.userPush(user);
-                    gameRoom.userList.dealer = user.socketId;       // userList에 딜러 변수 추가
+                    gameRoom.userList.dealer = socket.id;       // userList에 딜러 변수 추가
                     socket.roomId = msg.roomId;
 
                     Game.createRoom(gameRoom);

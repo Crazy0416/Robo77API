@@ -25,7 +25,7 @@ exports = module.exports = function(io, Game) {
                 console.log("SOCKET setStart EVENT: ", "emit user: ", clientSocket.id);
                 clientSocket.emit("setStart", {
                     "socketId": clientSocket.id,
-                    "cards": user.cardList.getList(),
+                    "cards": user.cardList.getList(),       // RangeError: Maximum call stack size exceed
                     "heart": HEART_CNT
                 });
             });

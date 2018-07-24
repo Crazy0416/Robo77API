@@ -15,6 +15,52 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
+        function showCardList() {
+            $('#messages').empty();
+            for(let i = 0; i < cards.length; i++) {
+                var iLi = document.createElement('li');
+                iLi.id = "card" + i;
+
+                var cardNum = document.createElement('div');
+                cardNum.className = "cardNum";
+                cardNum.text("cardNum: " + cards[i].cardNum);
+
+                var cardType = document.createElement('div');
+                cardType.className = "cardType";
+                cardType.text("cardType: " + cards[i].cardType);
+
+                var cardId = document.createElement('div');
+                cardId.className = "cardId";
+                cardId.text("cardId: " + cards[i].cardId);
+
+                var cardEmit = document.createElement('input');
+                cardEmit.type = "button";
+                cardEmit.id = "card" + i + "_btn";
+                cardEmit.value = "submit";
+
+                $("#card" + i + "_btn").click(function(){
+                    if (myTurn === false)
+                        return;
+                    else {
+                        socket.emit('emitCard', {
+                            socketId: socketId,
+                            roomId: roomId,
+                            cardType: cards[i].cardType,
+                            cardNum: cards[i].cardNum,
+                            cardId: cards[i].cardId
+                        });
+                    }
+                });
+
+                iLi.appendChild(cardNum).appendChild(cardType).appendChild(cardId).appendChild(cardEmit);
+                $('#messages').append(iLi);
+            };
+            var heartDiv = document.createElement('div');
+            heartDiv.text("heart: " + heart);
+            $('#messages').append(heartDiv);
+        }
+    </script>
+    <script>
         $(function () {
             var socket = io();
             socket.emit('joinRoom', {
@@ -32,23 +78,35 @@
                 console.log("emit card: ", cards[0]);
                 return false;
             });
-            socket.on('chat message', function(msg){
-                $('#messages').append($('<li>').text(msg));
+            socket.on('turnEndAndUpdate', function(msg){
+                if(msg.heart === -1) {
+                    heart--;
+                }
+                var cardObj = {
+                    cardType:msg.cardType,
+                    cardNum:msg.cardNum,
+                    cardId: msg.cardId
+                };
+                cards.push(cardObj);
+                myTurn = false;
+                showCardList();
             });
 
             socket.on('setStart', function(msg){
                 $('#messages').append($('<li>').text(JSON.stringify(msg)));
                 cards = msg.cards;
                 socketId = msg.socketId;
-                for(card of msg.cards) {
-                    $('#messages').append($('<p>').text("cardNum: " + card.cardNum))
-                }
-                console.log("setStart: ", JSON.stringify(msg));
+                heart = 3;
+                showCardList();
+            });
+
+            socket.on('setOver', function(msg){
+
             });
 
             socket.on('turnStart', function(msg){
-                $('#messages').append($('<li>').text("turnStart"));
-                console.log("turnStart: ", JSON.stringify(msg));
+                $('#messages').append($('<li>').text("your turn"));
+                myTurn = true;
             });
         });
     </script>

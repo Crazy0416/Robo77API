@@ -15,54 +15,9 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
-        function showCardList() {
-            $('#messages').empty();
-            for(let i = 0; i < cards.length; i++) {
-                var iLi = document.createElement('li');
-                iLi.id = "card" + i;
 
-                var cardNum = document.createElement('div');
-                cardNum.className = "cardNum";
-                cardNum.text("cardNum: " + cards[i].cardNum);
-
-                var cardType = document.createElement('div');
-                cardType.className = "cardType";
-                cardType.text("cardType: " + cards[i].cardType);
-
-                var cardId = document.createElement('div');
-                cardId.className = "cardId";
-                cardId.text("cardId: " + cards[i].cardId);
-
-                var cardEmit = document.createElement('input');
-                cardEmit.type = "button";
-                cardEmit.id = "card" + i + "_btn";
-                cardEmit.value = "submit";
-
-                $("#card" + i + "_btn").click(function(){
-                    if (myTurn === false)
-                        return;
-                    else {
-                        socket.emit('emitCard', {
-                            socketId: socketId,
-                            roomId: roomId,
-                            cardType: cards[i].cardType,
-                            cardNum: cards[i].cardNum,
-                            cardId: cards[i].cardId
-                        });
-                    }
-                });
-
-                iLi.appendChild(cardNum).appendChild(cardType).appendChild(cardId).appendChild(cardEmit);
-                $('#messages').append(iLi);
-            };
-            var heartDiv = document.createElement('div');
-            heartDiv.text("heart: " + heart);
-            $('#messages').append(heartDiv);
-        }
-    </script>
-    <script>
         $(function () {
-            var socket = io();
+            socket = io();
             socket.emit('joinRoom', {
                 "roomId" : 1
             });
@@ -108,6 +63,56 @@
                 $('#messages').append($('<li>').text("your turn"));
                 myTurn = true;
             });
+
+            function showCardList() {
+                $('#messages').empty();
+                for(let i = 0; i < cards.length; i++) {
+                    var iLi = document.createElement('li');
+                    iLi.id = "card" + i;
+
+                    var cardNum = document.createElement('div');
+                    cardNum.className = "cardNum";
+                    cardNum.innerHTML = "cardNum: " + cards[i].cardNum;
+
+                    var cardType = document.createElement('div');
+                    cardType.className = "cardType";
+                    cardType.innerHTML = "cardType: " + cards[i].cardType;
+
+                    var cardId = document.createElement('div');
+                    cardId.className = "cardId";
+                    cardId.innerHTML = "cardId: " + cards[i].cardId;
+
+                    var cardEmit = document.createElement('input');
+                    cardEmit.type = "button";
+                    cardEmit.id = "card" + i + "_btn";
+                    cardEmit.value = "submit";
+                    cardEmit.onclick = function() {
+                        if (myTurn === false)
+                            return;
+                        else {
+                            var _cardType =  cards[i].cardType;
+                            var _cardNum =  cards[i].cardNum;
+                            var _cardId =  cards[i].cardId;
+                            socket.emit('emitCard', {
+                                "socketId": socketId,
+                                "roomId": roomId,
+                                "cardType": _cardType,
+                                "cardNum": _cardNum,
+                                "cardId": _cardId
+                            });
+                        }
+                    };
+
+                    iLi.appendChild(cardNum);
+                    iLi.appendChild(cardType);
+                    iLi.appendChild(cardId);
+                    iLi.appendChild(cardEmit);
+                    $('#messages').append(iLi);
+                };
+                var heartDiv = document.createElement('div');
+                heartDiv.innerHTML = "heart: " + heart;
+                $('#messages').append(heartDiv);
+            }
         });
     </script>
 </head>

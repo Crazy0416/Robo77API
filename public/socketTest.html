@@ -93,6 +93,7 @@
                             var _cardType =  cards[i].cardType;
                             var _cardNum =  cards[i].cardNum;
                             var _cardId =  cards[i].cardId;
+                            cards.splice(i, 1);
                             socket.emit('emitCard', {
                                 "socketId": socketId,
                                 "roomId": roomId,

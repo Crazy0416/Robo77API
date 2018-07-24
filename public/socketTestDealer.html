@@ -30,6 +30,10 @@
                 return false;
             });
 
+            socket.on('gameOver', function(msg) {
+                $('#messages').append($('<li>').text("gameOver"));
+            })
+
             socket.on('cardInfoToDealer', function(msg) {
                 $('#messages').append($('<li>').text("cardInfoToDealer: " + JSON.stringify(msg)));
 
@@ -46,6 +50,7 @@
                             socketId: msg.socketId
                         })
                     } else if (SumResult >= 77) {
+                        SumResult = 0;
                         socket.emit('gameOver77', {
                             roomId: 1,
                             socketId: msg.socketId

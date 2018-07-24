@@ -16,7 +16,9 @@
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
         $(function () {
-            var socket = io();
+            socket = io();
+            SumResult = 0;
+
             socket.emit('createRoom', {
                 "roomId" : 1
             });
@@ -27,11 +29,36 @@
                 $('#m').val('');
                 return false;
             });
-            socket.on('chat message', function(msg){
-                $('#messages').append($('<li>').text(msg));
-            });
+
             socket.on('cardInfoToDealer', function(msg) {
                 $('#messages').append($('<li>').text("cardInfoToDealer: " + JSON.stringify(msg)));
+
+                if(msg.cardType === 1) {
+                    socket.emit('noCondition', {
+                        roomId: 1,
+                        socketId: msg.socketId
+                    })
+                } else if(msg.cardType === 0) {
+                    SumResult += msg.cardNum;
+                    if(SumResult % 11 === 0 && SumResult !== 0) {
+                        socket.emit('multiplesOf11', {
+                            roomId: 1,
+                            socketId: msg.socketId
+                        })
+                    } else if (SumResult >= 77) {
+                        socket.emit('gameOver77', {
+                            roomId: 1,
+                            socketId: msg.socketId
+                        })
+                    } else {
+                        socket.emit('noCondition', {
+                            roomId: 1,
+                            socketId: msg.socketId
+                        })
+                    }
+                }
+
+                $('#messages').append($('<li>').text("card Sum: " + SumResult));
             })
         });
     </script>

@@ -59,6 +59,11 @@
 
             });
 
+            socket.on('gameOver', function(msg){
+                $('#messages').empty();
+                $('#messages').append($('<li>').text("GameOver"));
+            });
+
             socket.on('turnStart', function(msg){
                 $('#messages').append($('<li>').text("your turn"));
                 myTurn = true;
